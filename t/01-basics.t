@@ -4,15 +4,15 @@ use 5.010;
 use strict;
 use warnings;
 
-use SHARYANTO::Color::Util qw(
-                                 mix_2_rgb_colors
-                                 rand_rgb_color
-                                 rgb2grayscale
-                                 rgb2sepia
-                                 reverse_rgb_color
-                                 rgb_luminance
-                                 tint_rgb_color
-                         );
+use Color::RGB::Util qw(
+                           mix_2_rgb_colors
+                           rand_rgb_color
+                           rgb2grayscale
+                           rgb2sepia
+                           reverse_rgb_color
+                           rgb_luminance
+                           tint_rgb_color
+                   );
 use Test::More 0.98;
 
 subtest mix_2_rgb_colors => sub {

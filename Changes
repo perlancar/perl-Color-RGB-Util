@@ -1,4 +1,9 @@
-Revision history for SHARYANTO-Color-Util
+Revision history for Color-RGB-Util
+
+0.57    2014-12-05 (PERLANCAR) (unreleased)
+
+        - Rename module/dist from SHARYANTO-Color-Util to Color-RGB-Util.
+
 
 0.56    2013-09-10 (SHARYANTO)
 

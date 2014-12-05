@@ -1,4 +1,7 @@
-package SHARYANTO::Color::Util;
+package Color::RGB::Util;
+
+# DATE
+# VERSION
 
 use 5.010001;
 use strict;
@@ -17,8 +20,6 @@ our @EXPORT_OK = qw(
                        rgb_luminance
                        tint_rgb_color
                );
-
-# VERSION
 
 sub mix_2_rgb_colors {
     my ($rgb1, $rgb2, $pct) = @_;
@@ -152,11 +153,11 @@ sub tint_rgb_color {
 }
 
 1;
-# ABSTRACT: Color-related utilities
+# ABSTRACT: Utilities related to RGB colors
 
 =head1 SYNOPSIS
 
- use SHARYANTO::Color::Util qw(
+ use Color::RGB::Util qw(
      mix_2_rgb_colors
      rand_rgb_color
      rgb2grayscale
@@ -232,6 +233,6 @@ $rgb1, $part1, $rgb2, $part2, ... (e.g. 'ffffff', 1, 'ff0000', 1, '00ff00', 2).
 
 =head1 SEE ALSO
 
-L<SHARYANTO>
+L<Color::ANSI::Util>
 
 =cut
