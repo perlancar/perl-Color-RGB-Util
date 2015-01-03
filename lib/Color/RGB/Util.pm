@@ -225,12 +225,6 @@ but the less luminance the color is the less it is tinted with the tint color.
 This has the effect of black color still being black instead of becoming tinted.
 
 
-=head1 TODO
-
-mix_rgb_colors() to mix several RGB colors. Args might be $rgb1, $rgb2, ... or
-$rgb1, $part1, $rgb2, $part2, ... (e.g. 'ffffff', 1, 'ff0000', 1, '00ff00', 2).
-
-
 =head1 SEE ALSO
 
 L<Color::ANSI::Util>
