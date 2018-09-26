@@ -192,29 +192,53 @@ sub rgb_is_light {
 
 None are exported by default, but they are exportable.
 
-=head2 mix_2_rgb_colors($rgb1, $rgb2, $pct) => STR
+=head2 mix_2_rgb_colors
+
+Usage:
+
+ my $mixed_rgb = mix_2_rgb_colors($rgb1, $rgb2, $pct);
 
 Mix 2 RGB colors. C<$pct> is a number between 0 and 1, by default 0.5 (halfway),
 the closer to 1 the closer the resulting color to C<$rgb2>.
 
-=head2 rand_rgb_color([$low_limit[, $high_limit]]) => STR
+=head2 rand_rgb_color
+
+Usage:
+
+ my $rgb = rand_rgb_color([ $low_limit [ , $high_limit ] ]);
 
 Generate a random RGB color. You can specify the limit. Otherwise, they default
 to the full range (000000 to ffffff).
 
-=head2 rgb2grayscale($rgb) => RGB
+=head2 rgb2grayscale
+
+Usage:
+
+ my $rgb_gs = rgb2grayscale($rgb);
 
 Convert C<$rgb> to grayscale RGB value.
 
-=head2 rgb2sepia($rgb) => RGB
+=head2 rgb2sepia
+
+Usage:
+
+ my $rgb_sepia = rgb2sepia($rgb);
 
 Convert C<$rgb> to sepia tone RGB value.
 
-=head2 reverse_rgb_color($rgb) => RGB
+=head2 reverse_rgb_color
+
+Usage:
+
+ my $reversed = reverse_rgb_color($rgb);
 
 Reverse C<$rgb>.
 
-=head2 rgb_luminance($rgb) => NUM
+=head2 rgb_luminance
+
+Usage:
+
+ my $luminance = rgb_luminance($rgb);
 
 Calculate standard/objective luminance from RGB value using this formula:
 
@@ -222,7 +246,11 @@ Calculate standard/objective luminance from RGB value using this formula:
 
 where R, G, and B range from 0 to 1. Return a number from 0 to 1.
 
-=head2 tint_rgb_color($rgb, $tint_rgb, $pct) => RGB
+=head2 tint_rgb_color
+
+Usage:
+
+ my $new_rgb = tint_rgb_color($rgb, $tint_rgb, $pct)
 
 Tint C<$rgb> with C<$tint_rgb>. $pct is by default 0.5. It is similar to mixing,
 but the less luminance the color is the less it is tinted with the tint color.
@@ -232,11 +260,11 @@ This has the effect of black color still being black instead of becoming tinted.
 
 Usage:
 
- $dist = rgb_distance($rgb1, $rgb2)
+ my $dist = rgb_distance($rgb1, $rgb2)
 
 Calculate RGB distance, which is defined as:
 
- (($r1-$r2)**2 + ($g1-$g2)**2 + ($b1-$b2)**2)**0.5
+ ((R1-R2)**2 + (G1-G2)**2 + (B1-B2)**2)**0.5
 
 For example, the distance between "000000" and "ffffff" is ~441.67, while the
 distance between "ffff00" and "ffffff" is 255.
@@ -245,7 +273,7 @@ distance between "ffff00" and "ffffff" is 255.
 
 Usage:
 
- $is_dark = rgb_is_dark($rgb)
+ my $is_dark = rgb_is_dark($rgb)
 
 Return true if C<$rgb> is a "dark" color, which is determined by checking if the
 RGB distance to "000000" is smaller than to "ffffff".
@@ -254,7 +282,7 @@ RGB distance to "000000" is smaller than to "ffffff".
 
 Usage:
 
- $is_dark = rgb_is_dark($rgb)
+ my $is_light = rgb_is_light($rgb)
 
 Return true if C<$rgb> is a "light" color, which is determined by checking if
 the RGB distance to "000000" is larger than to "ffffff".
