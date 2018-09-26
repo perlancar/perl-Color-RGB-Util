@@ -24,21 +24,18 @@ our @EXPORT_OK = qw(
                        rgb_is_light
                );
 
+my $re_rgb = qr/\A#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})\z/;
+
 sub mix_2_rgb_colors {
     my ($rgb1, $rgb2, $pct) = @_;
 
     $pct //= 0.5;
 
-    $rgb1 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb1 color, must be in 'ffffff' form";
-    my $r1 = hex($1);
-    my $g1 = hex($2);
-    my $b1 = hex($3);
-    $rgb2 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb2 color, must be in 'ffffff' form";
-    my $r2 = hex($1);
-    my $g2 = hex($2);
-    my $b2 = hex($3);
+    my ($r1, $g1, $b1) =
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
+    my ($r2, $g2, $b2) =
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
+    for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
 
     return sprintf("%02x%02x%02x",
                    $r1 + $pct*($r2-$r1),
@@ -51,17 +48,12 @@ sub rand_rgb_color {
     my ($rgb1, $rgb2) = @_;
 
     $rgb1 //= '000000';
-    $rgb1 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb1 color, must be in 'ffffff' form";
-    my $r1 = hex($1);
-    my $g1 = hex($2);
-    my $b1 = hex($3);
+    my ($r1, $g1, $b1) =
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
     $rgb2 //= 'ffffff';
-    $rgb2 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb2 color, must be in 'ffffff' form";
-    my $r2 = hex($1);
-    my $g2 = hex($2);
-    my $b2 = hex($3);
+    my ($r2, $g2, $b2) =
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
+    for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
 
     return sprintf("%02x%02x%02x",
                    $r1 + rand()*($r2-$r1+1),
@@ -73,11 +65,9 @@ sub rand_rgb_color {
 sub rgb2grayscale {
     my ($rgb) = @_;
 
-    $rgb =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb color, must be in 'ffffff' form";
-    my $r = hex($1);
-    my $g = hex($2);
-    my $b = hex($3);
+    my ($r, $g, $b) =
+        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+    for ($r, $g, $b) { $_ = hex $_ }
 
     # basically we just average the R, G, B
     my $avg = int(($r + $g + $b)/3);
@@ -87,11 +77,9 @@ sub rgb2grayscale {
 sub rgb2sepia {
     my ($rgb) = @_;
 
-    $rgb =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb color, must be in 'ffffff' form";
-    my $r = hex($1);
-    my $g = hex($2);
-    my $b = hex($3);
+    my ($r, $g, $b) =
+        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+    for ($r, $g, $b) { $_ = hex $_ }
 
     # reference: http://www.techrepublic.com/blog/howdoi/how-do-i-convert-images-to-grayscale-and-sepia-tone-using-c/120
     my $or = ($r*0.393) + ($g*0.769) + ($b*0.189);
@@ -104,11 +92,9 @@ sub rgb2sepia {
 sub reverse_rgb_color {
     my ($rgb) = @_;
 
-    $rgb =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb color, must be in 'ffffff' form";
-    my $r = hex($1);
-    my $g = hex($2);
-    my $b = hex($3);
+    my ($r, $g, $b) =
+        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+    for ($r, $g, $b) { $_ = hex $_ }
 
     return sprintf("%02x%02x%02x", 255-$r, 255-$g, 255-$b);
 }
@@ -121,11 +107,9 @@ sub _rgb_luminance {
 sub rgb_luminance {
     my ($rgb) = @_;
 
-    $rgb =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb color, must be in 'ffffff' form";
-    my $r = hex($1);
-    my $g = hex($2);
-    my $b = hex($3);
+    my ($r, $g, $b) =
+        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+    for ($r, $g, $b) { $_ = hex $_ }
 
     return _rgb_luminance($r, $g, $b);
 }
@@ -135,16 +119,11 @@ sub tint_rgb_color {
 
     $pct //= 0.5;
 
-    $rgb1 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb color, must be in 'ffffff' form";
-    my $r1 = hex($1);
-    my $g1 = hex($2);
-    my $b1 = hex($3);
-    $rgb2 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid tint color, must be in 'ffffff' form";
-    my $r2 = hex($1);
-    my $g2 = hex($2);
-    my $b2 = hex($3);
+    my ($r1, $g1, $b1) =
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
+    my ($r2, $g2, $b2) =
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
+    for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
 
     my $lum = _rgb_luminance($r1, $g1, $b1);
 
@@ -159,12 +138,9 @@ sub rgb_distance {
     my ($rgb1, $rgb2) = @_;
 
     my ($r1, $g1, $b1) =
-        $rgb1 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb color, must be in 'ffffff' form";
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
     my ($r2, $g2, $b2) =
-        $rgb2 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
-        or die "Invalid rgb color, must be in 'ffffff' form";
-
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
     for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
 
     (($r1-$r2)**2 + ($g1-$g2)**2 + ($b1-$b2)**2)**0.5;
