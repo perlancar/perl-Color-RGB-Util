@@ -19,6 +19,9 @@ our @EXPORT_OK = qw(
                        rgb2sepia
                        rgb_luminance
                        tint_rgb_color
+                       rgb_distance
+                       rgb_is_dark
+                       rgb_is_light
                );
 
 sub mix_2_rgb_colors {
@@ -152,6 +155,31 @@ sub tint_rgb_color {
                );
 }
 
+sub rgb_distance {
+    my ($rgb1, $rgb2) = @_;
+
+    my ($r1, $g1, $b1) =
+        $rgb1 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
+        or die "Invalid rgb color, must be in 'ffffff' form";
+    my ($r2, $g2, $b2) =
+        $rgb2 =~ /^#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/o
+        or die "Invalid rgb color, must be in 'ffffff' form";
+
+    for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
+
+    (($r1-$r2)**2 + ($g1-$g2)**2 + ($b1-$b2)**2)**0.5;
+}
+
+sub rgb_is_dark {
+    my ($rgb) = @_;
+    rgb_distance($rgb, "000000") < rgb_distance($rgb, "ffffff") ? 1:0;
+}
+
+sub rgb_is_light {
+    my ($rgb) = @_;
+    rgb_distance($rgb, "000000") > rgb_distance($rgb, "ffffff") ? 1:0;
+}
+
 1;
 # ABSTRACT: Utilities related to RGB colors
 
@@ -223,6 +251,37 @@ where R, G, and B range from 0 to 1. Return a number from 0 to 1.
 Tint C<$rgb> with C<$tint_rgb>. $pct is by default 0.5. It is similar to mixing,
 but the less luminance the color is the less it is tinted with the tint color.
 This has the effect of black color still being black instead of becoming tinted.
+
+=head2 rgb_distance
+
+Usage:
+
+ $dist = rgb_distance($rgb1, $rgb2)
+
+Calculate RGB distance, which is defined as:
+
+ (($r1-$r2)**2 + ($g1-$g2)**2 + ($b1-$b2)**2)**0.5
+
+For example, the distance between "000000" and "ffffff" is ~441.67, while the
+distance between "ffff00" and "ffffff" is 255.
+
+=head2 rgb_is_dark
+
+Usage:
+
+ $is_dark = rgb_is_dark($rgb)
+
+Return true if C<$rgb> is a "dark" color, which is determined by checking if the
+RGB distance to "000000" is smaller than to "ffffff".
+
+=head2 rgb_is_light
+
+Usage:
+
+ $is_dark = rgb_is_dark($rgb)
+
+Return true if C<$rgb> is a "light" color, which is determined by checking if
+the RGB distance to "000000" is larger than to "ffffff".
 
 
 =head1 SEE ALSO
