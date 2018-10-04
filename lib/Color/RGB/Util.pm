@@ -168,6 +168,10 @@ sub rgb_is_light {
      rgb2sepia
      reverse_rgb_color
      rgb_luminance
+     tint_rgb_color
+     rgb_distance
+     rgb_is_light
+     rgb_is_dark
  );
 
  say mix_2_rgb_colors('#ff0000', '#ffffff');     # pink (red + white)
@@ -183,6 +187,17 @@ sub rgb_is_light {
  say reverse_rgb_color('0033CC');                # => ffcc33
 
  say rgb_luminance('d090aa');                    # => ffcc33
+
+ say tint_rgb_color('#ff8800', '#0033cc');       # => b36e3c
+
+ say rgb_distance('000000', '000000')            # => 0
+ say rgb_distance('01f000', '04f400')            # => 5
+ say rgb_distance('ffff00', 'ffffff')            # => 255
+
+ say rgb_is_dark('404040');                      # => 1
+ say rgb_is_dark('a0a0a0');                      # => 0
+ say rgb_is_light('404040');                     # => 0
+ say rgb_is_light('a0a0a0');                     # => 1
 
 
 =head1 DESCRIPTION
