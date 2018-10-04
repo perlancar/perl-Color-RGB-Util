@@ -195,6 +195,7 @@ sub rgb_is_light {
      rgb_luminance
      tint_rgb_color
      rgb_distance
+     rgb_diff
      rgb_is_light
      rgb_is_dark
  );
@@ -223,6 +224,14 @@ sub rgb_is_light {
  say rgb_is_dark('a0a0a0');                      # => 0
  say rgb_is_light('404040');                     # => 0
  say rgb_is_light('a0a0a0');                     # => 1
+
+ say rgb_diff('000000', '000000');               # => 0
+ say rgb_diff('01f000', '04f400');               # => 5
+ say rgb_diff('ffff00', 'ffffff');               # => 255
+
+ say rgb_diff('000000', '000000', 'approx1');    # => 0
+ say rgb_diff('01f000', '04f400', 'approx1');    # => 9.06
+ say rgb_diff('ffff00', 'ffffff', 'approx1');    # => 360.98
 
 
 =head1 DESCRIPTION
