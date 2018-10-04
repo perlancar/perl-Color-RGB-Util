@@ -1,3 +1,8 @@
+0.591   2018-10-04 (PERLANCAR)
+
+        - Add rgb_diff().
+
+
 0.590   2018-09-26 (PERLANCAR)
 
 	- Add functions: rgb_distance, rgb_is_dark, rgb_is_light.
