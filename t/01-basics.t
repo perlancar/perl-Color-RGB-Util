@@ -12,6 +12,7 @@ use Color::RGB::Util qw(
                            reverse_rgb_color
                            rgb_luminance
                            tint_rgb_color
+                           rgb_diff
                    );
 use Test::More 0.98;
 
@@ -51,6 +52,12 @@ subtest tint_rgb_color => sub {
     is(tint_rgb_color('FF8800', '0033CC', 1), '675579');
     is(tint_rgb_color('0033CC', 'FF8800', 0.75), '263fad');
     is(tint_rgb_color('0033CC', 'FF8800', 0.25), '0c37c1');
+};
+
+subtest rgb_diff => sub {
+    is(int(rgb_diff("000000","000000", "approx1")),   0);
+    is(int(rgb_diff("00ff00","0000ff", "approx1")), 674);
+    is(int(rgb_diff("ff0000","000000", "approx1")), 403);
 };
 
 DONE_TESTING:
