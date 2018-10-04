@@ -15,6 +15,7 @@ use Color::RGB::Util qw(
                            rgb_luminance
                            tint_rgb_color
                            rgb_distance
+                           rgb_diff
                            rgb_is_dark
                            rgb_is_light
                    );
@@ -62,6 +63,12 @@ subtest rgb_distance => sub {
     is(rgb_distance('000000', '000000'), 0);
     is(rgb_distance('01f000', '04f400'), 5);
     is(rgb_distance('ffff00', 'ffffff'), 255);
+};
+
+subtest rgb_diff => sub {
+    is(int(rgb_diff("000000","000000", "approx1")),   0);
+    is(int(rgb_diff("00ff00","0000ff", "approx1")), 674);
+    is(int(rgb_diff("ff0000","000000", "approx1")), 403);
 };
 
 subtest rgb_is_dark => sub {

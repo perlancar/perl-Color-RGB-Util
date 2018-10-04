@@ -20,6 +20,7 @@ our @EXPORT_OK = qw(
                        rgb_luminance
                        tint_rgb_color
                        rgb_distance
+                       rgb_diff
                        rgb_is_dark
                        rgb_is_light
                );
@@ -146,6 +147,30 @@ sub rgb_distance {
     (($r1-$r2)**2 + ($g1-$g2)**2 + ($b1-$b2)**2)**0.5;
 }
 
+sub rgb_diff {
+    my ($rgb1, $rgb2, $algo) = @_;
+
+    $algo //= 'euclidean';
+
+    my ($r1, $g1, $b1) =
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
+    my ($r2, $g2, $b2) =
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
+    for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
+
+    my $dr2 = ($r1-$r2)**2;
+    my $dg2 = ($g1-$g2)**2;
+    my $db2 = ($b1-$b2)**2;
+
+    if ($algo eq 'approx1') {
+        my $rm = ($r1 + $r2)/2;
+        (2*$dr2 + 4*$dg2 + 3*$db2 + $rm*($dr2 - $db2)/256 )**0.5;
+    } else {
+        # euclidean
+        ($dr2 + $dg2 + $db2)**0.5;
+    }
+}
+
 sub rgb_is_dark {
     my ($rgb) = @_;
     rgb_distance($rgb, "000000") < rgb_distance($rgb, "ffffff") ? 1:0;
@@ -168,6 +193,10 @@ sub rgb_is_light {
      rgb2sepia
      reverse_rgb_color
      rgb_luminance
+     tint_rgb_color
+     rgb_distance
+     rgb_is_light
+     rgb_is_dark
  );
 
  say mix_2_rgb_colors('#ff0000', '#ffffff');     # pink (red + white)
@@ -183,6 +212,17 @@ sub rgb_is_light {
  say reverse_rgb_color('0033CC');                # => ffcc33
 
  say rgb_luminance('d090aa');                    # => ffcc33
+
+ say tint_rgb_color('#ff8800', '#0033cc');       # => b36e3c
+
+ say rgb_distance('000000', '000000')            # => 0
+ say rgb_distance('01f000', '04f400')            # => 5
+ say rgb_distance('ffff00', 'ffffff')            # => 255
+
+ say rgb_is_dark('404040');                      # => 1
+ say rgb_is_dark('a0a0a0');                      # => 0
+ say rgb_is_light('404040');                     # => 0
+ say rgb_is_light('a0a0a0');                     # => 1
 
 
 =head1 DESCRIPTION
@@ -262,12 +302,33 @@ Usage:
 
  my $dist = rgb_distance($rgb1, $rgb2)
 
-Calculate RGB distance, which is defined as:
+Calculate the euclidean RGB distance, using this formula:
 
- ((R1-R2)**2 + (G1-G2)**2 + (B1-B2)**2)**0.5
+ ( (R1-R2)**2 + (G1-G2)**2 + (B1-B2)**2 )**0.5
 
 For example, the distance between "000000" and "ffffff" is ~441.67, while the
 distance between "ffff00" and "ffffff" is 255.
+
+=head2 rgb_diff
+
+Usage:
+
+ my $dist = rgb_diff($rgb1, $rgb2[ , $algo ])
+
+Calculate difference between two RGB colors, using one of several algorithms.
+The default ("euclidean") simply calculates the distance as:
+
+ ( (R1-R2)**2 + (G1-G2)**2 + (B1-B2)**2 )**0.5
+
+which is the same as what L</"rgb_distance">() would produce. Another algorithm
+("approx1") uses the following formula:
+
+ ( 2*(R1-R2)**2 + 4*(G1-G2)**2 + 3*(B1-B2)**2 + Rm*((R1-R2)**2 - (B1-B2)**2)/256 )**0.5
+
+where, Rm or "R mean" is (R1+R2)/2.
+
+For more details about color difference, refer to
+L<https://en.wikipedia.org/wiki/Color_difference>.
 
 =head2 rgb_is_dark
 
