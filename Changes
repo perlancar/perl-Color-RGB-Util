@@ -1,3 +1,10 @@
+0.593   2018-10-05 (PERLANCAR)
+
+        - No functional changes.
+
+        - [build] Rebuild to fix repository URL.
+
+
 0.592   2018-10-05 (PERLANCAR)
 
         - Add mix_rgb_colors.
