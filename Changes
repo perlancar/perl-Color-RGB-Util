@@ -1,3 +1,10 @@
+0.591   2018-10-05 (PERLANCAR)
+
+        - Add functions: rgb_diff, mix_rgb_colors.
+
+        - [doc] Document functions previously not documented.
+
+
 0.590   2018-09-26 (PERLANCAR)
 
 	- Add functions: rgb_distance, rgb_is_dark, rgb_is_light.
