@@ -215,6 +215,7 @@ sub rgb_is_light {
 
  use Color::RGB::Util qw(
      mix_2_rgb_colors
+     mix_rgb_colors
      rand_rgb_color
      rgb2grayscale
      rgb2sepia
@@ -228,6 +229,10 @@ sub rgb_is_light {
 
  say mix_2_rgb_colors('#ff0000', '#ffffff');     # pink (red + white)
  say mix_2_rgb_colors('ff0000', 'ffffff', 0.75); # pink with a whiter shade
+
+ say mix_rgb_colors('ff0000', 1, 'ffffff', 1);   # pink (red + white 1 : 1)
+ say mix_rgb_colors('ff0000', 1, 'ffffff', 3);   # pink with a whiter shade (red + white 1 : 3)
+ say mix_rgb_colors('ff0000', 1, 'ffffff', 1, '0000ff', 0.5);   # bluish pink
 
  say rand_rgb_color();
  say rand_rgb_color('000000', '333333');         # limit range
@@ -267,6 +272,14 @@ Usage:
 
 Mix 2 RGB colors. C<$pct> is a number between 0 and 1, by default 0.5 (halfway),
 the closer to 1 the closer the resulting color to C<$rgb2>.
+
+=head2 mix_rgb_colors
+
+Usage:
+
+ my $mixed_rgb = mix_rgb_colors($color1, $weight1, $color2, $weight2, ...);
+
+Mix several RGB colors.
 
 =head2 rand_rgb_color
 
