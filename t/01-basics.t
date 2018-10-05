@@ -31,9 +31,9 @@ subtest mix_2_rgb_colors => sub {
 };
 
 subtest mix_rgb_colors => sub {
-    dies_ok { mix_rgb_colors('0', 1) }, 'invalid rgb -> dies';
-    dies_ok { mix_rgb_colors('000000', 0) }, 'total weight zero #1 -> dies';
-    dies_ok { mix_rgb_colors('000000', 0) }, 'total weight zero #2 -> dies';
+    dies_ok { mix_rgb_colors('0', 1) } 'invalid rgb -> dies';
+    dies_ok { mix_rgb_colors('000000', 0) } 'total weight zero #1 -> dies';
+    dies_ok { mix_rgb_colors('000000', 0) } 'total weight zero #2 -> dies';
     is(mix_rgb_colors('#ff8800', 1, '#0033cc', 1), '7f5d66');
     is(mix_rgb_colors('#ff8800', 2, '#0033cc', 1), 'aa6b44');
     is(mix_rgb_colors('#ff8800', 1, '#0033cc', 2, '000000', 3), '2a2744');
@@ -69,16 +69,16 @@ subtest tint_rgb_color => sub {
     is(tint_rgb_color('0033CC', 'FF8800', 0.25), '0c37c1');
 };
 
-subtest rgb_diff => sub {
-    is(int(rgb_diff("000000","000000", "approx1")),   0);
-    is(int(rgb_diff("00ff00","0000ff", "approx1")), 674);
-    is(int(rgb_diff("ff0000","000000", "approx1")), 403);
-};
-
 subtest rgb_distance => sub {
     is(rgb_distance('000000', '000000'), 0);
     is(rgb_distance('01f000', '04f400'), 5);
     is(rgb_distance('ffff00', 'ffffff'), 255);
+};
+
+subtest rgb_diff => sub {
+    is(int(rgb_diff("000000","000000", "approx1")),   0);
+    is(int(rgb_diff("00ff00","0000ff", "approx1")), 674);
+    is(int(rgb_diff("ff0000","000000", "approx1")), 403);
 };
 
 subtest rgb_is_dark => sub {

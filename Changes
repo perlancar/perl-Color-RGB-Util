@@ -1,8 +1,11 @@
-0.591   2018-10-05 (PERLANCAR)
+0.592   2018-10-05 (PERLANCAR) (unreleased)
 
-        - Add functions: rgb_diff, mix_rgb_colors.
+        - Add mix_rgb_colors.
 
-        - [doc] Document functions previously not documented.
+
+0.591   2018-10-04 (PERLANCAR)
+
+        - Add rgb_diff().
 
 
 0.590   2018-09-26 (PERLANCAR)
