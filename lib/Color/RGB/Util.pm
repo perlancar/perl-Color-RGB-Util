@@ -13,6 +13,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
                        mix_2_rgb_colors
+                       mix_rgb_colors
                        rand_rgb_color
                        reverse_rgb_color
                        rgb2grayscale
@@ -42,6 +43,32 @@ sub mix_2_rgb_colors {
                    $r1 + $pct*($r2-$r1),
                    $g1 + $pct*($g2-$g1),
                    $b1 + $pct*($b2-$b1),
+               );
+}
+
+sub mix_rgb_colors {
+
+    my (@weights, @r, @g, @b);
+
+    while (@_ >= 2) {
+        my ($rgb, $weight) = splice @_, 0, 2;
+        my ($r, $g, $b) = $rgb =~ $re_rgb
+            or die "Invalid rgb color '$rgb', must be in 'ffffff' form";
+        push @r, hex $r;
+        push @g, hex $g;
+        push @b, hex $b;
+        push @weights, $weight;
+    }
+    my $tot_r = 0; for (0..$#r) { $tot_r += $r[$_]*$weights[$_] }
+    my $tot_g = 0; for (0..$#g) { $tot_g += $g[$_]*$weights[$_] }
+    my $tot_b = 0; for (0..$#b) { $tot_b += $b[$_]*$weights[$_] }
+    my $tot_weight = 0; $tot_weight += $_ for @weights;
+    die "Zero/negative total weight" unless $tot_weight > 0;
+
+    return sprintf("%02x%02x%02x",
+                   $tot_r / $tot_weight,
+                   $tot_g / $tot_weight,
+                   $tot_b / $tot_weight,
                );
 }
 
