@@ -16,6 +16,8 @@ our @EXPORT_OK = qw(
                        mix_rgb_colors
                        rand_rgb_color
                        assign_rgb_color
+                       assign_rgb_light_color
+                       assign_rgb_dark_color
                        map_rgb_color
                        reverse_rgb_color
                        rgb2grayscale
@@ -101,6 +103,20 @@ sub assign_rgb_color {
     substr($sha1, 0, 2) .
     substr($sha1, 18, 2) .
     substr($sha1, 38, 2);
+}
+
+sub assign_rgb_light_color {
+    my $str = shift;
+
+    my $rgb = assign_rgb_color($str);
+    rgb_is_light($rgb) ? $rgb : mix_2_rgb_colors($rgb, 'ffffff');
+}
+
+sub assign_rgb_dark_color {
+    my $str = shift;
+
+    my $rgb = assign_rgb_color($str);
+    rgb_is_dark($rgb) ? $rgb : mix_2_rgb_colors($rgb, '000000');
 }
 
 sub rgb2grayscale {
@@ -231,6 +247,8 @@ sub rgb_is_light {
      mix_rgb_colors
      rand_rgb_color
      assign_rgb_color
+     assign_rgb_light_color
+     assign_rgb_dark_color
      rgb2grayscale
      rgb2sepia
      reverse_rgb_color
@@ -324,6 +342,16 @@ Usage:
 Map a string to an RGB color. This is done by producing SHA-1 digest (160bit, 20
 bytes) of the string, then taking the first, 10th, and last byte to become the
 RGB color.
+
+=head2 assign_rgb_light_color
+
+Like L</assign_rgb_color> except that it will make sure the assigned color is
+light.
+
+=head2 assign_rgb_dark_color
+
+Like L</assign_rgb_color> except that it will make sure the assigned color is
+dark.
 
 =head2 rgb2grayscale
 
