@@ -15,6 +15,8 @@ our @EXPORT_OK = qw(
                        mix_2_rgb_colors
                        mix_rgb_colors
                        rand_rgb_color
+                       assign_rgb_color
+                       map_rgb_color
                        reverse_rgb_color
                        rgb2grayscale
                        rgb2sepia
@@ -88,6 +90,17 @@ sub rand_rgb_color {
                    $g1 + rand()*($g2-$g1+1),
                    $b1 + rand()*($b2-$b1+1),
                );
+}
+
+sub assign_rgb_color {
+    require Digest::SHA;
+
+    my ($str) = @_;
+
+    my $sha1 = Digest::SHA::sha1_hex($str);
+    substr($sha1, 0, 2) .
+    substr($sha1, 18, 2) .
+    substr($sha1, 38, 2);
 }
 
 sub rgb2grayscale {
@@ -217,6 +230,7 @@ sub rgb_is_light {
      mix_2_rgb_colors
      mix_rgb_colors
      rand_rgb_color
+     assign_rgb_color
      rgb2grayscale
      rgb2sepia
      reverse_rgb_color
@@ -237,6 +251,8 @@ sub rgb_is_light {
 
  say rand_rgb_color();
  say rand_rgb_color('000000', '333333');         # limit range
+
+ say assign_rgb_color("foo");                    # 0b5d33
 
  say rgb2grayscale('0033CC');                    # => 555555
 
@@ -298,6 +314,16 @@ Usage:
 
 Generate a random RGB color. You can specify the limit. Otherwise, they default
 to the full range (000000 to ffffff).
+
+=head2 assign_rgb_color
+
+Usage:
+
+ my $rgb = assign_rgb_color($str);
+
+Map a string to an RGB color. This is done by producing SHA-1 digest (160bit, 20
+bytes) of the string, then taking the first, 10th, and last byte to become the
+RGB color.
 
 =head2 rgb2grayscale
 
