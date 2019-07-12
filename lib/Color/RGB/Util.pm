@@ -15,6 +15,7 @@ our @EXPORT_OK = qw(
                        mix_2_rgb_colors
                        mix_rgb_colors
                        rand_rgb_color
+                       rand_rgb_colors
                        assign_rgb_color
                        assign_rgb_light_color
                        assign_rgb_dark_color
@@ -92,6 +93,41 @@ sub rand_rgb_color {
                    $g1 + rand()*($g2-$g1+1),
                    $b1 + rand()*($b2-$b1+1),
                );
+}
+
+sub rand_rgb_colors {
+    my $opts = ref $_[0] eq 'HASH' ? shift : {};
+    my $num = shift // 1;
+    my $light_color  = exists($opts->{light_color}) ? $opts->{light_color} : 1;
+    my $max_attempts = $opts->{max_attempts} // 1000;
+    my $avoid_colors = $opts->{avoid_colors};
+
+    my @res;
+    while (@res < $num) {
+        my $attempt = 0;
+        my $rgb;
+        while (1) {
+            $rgb = rand_rgb_color();
+            my $reject = 0;
+          REJECT: {
+                if ($light_color) {
+                    do { $reject++; last } if rgb_is_dark($rgb);
+                } elsif (defined $light_color) {
+                    do { $reject++; last } if rgb_is_light($rgb);
+                }
+                if ($avoid_colors && ref $avoid_colors eq 'ARRAY') {
+                    do { $reject++; last } if grep { $rgb eq $_ } @$avoid_colors;
+                }
+                if ($avoid_colors && ref $avoid_colors eq 'HASH') {
+                    do { $reject++; last } if $avoid_colors->{$rgb}
+                }
+            } # REJECT
+            last if !$reject;
+            last if ++$attempt >= $max_attempts;
+        }
+        push @res, $rgb;
+    }
+    @res;
 }
 
 sub assign_rgb_color {
@@ -332,6 +368,40 @@ Usage:
 
 Generate a random RGB color. You can specify the limit. Otherwise, they default
 to the full range (000000 to ffffff).
+
+=head2 rand_rgb_colors
+
+Usage:
+
+ my @rgbs = rand_rgb_colors([ \%opts ], $num=1);
+
+Produce C<$num> random RGB colors, with some options. Will make reasonable
+attempt to make the colors different from one another.
+
+Known options:
+
+=over
+
+=item * light_color
+
+Boolean, default true. By default, this function will create light RGB colors,
+assuming the background color is dark, which is often the case in terminal. If
+this option is set to false, will create dark colors instead, If this option is
+set to undef, will create both dark and light colors.
+
+=item * avoid_colors
+
+Arrayref or hashref. List of colors to be avoided. You can put, for example,
+colors that you've already assigned/picked for your palette and don't want to
+use again.
+
+=item * max_attempts
+
+Uint, default 1000. Number of attempts to try generating the next random color
+if the generated color is rejected because it is light/dark, or because it's in
+C<avoid_colors>.
+
+=back
 
 =head2 assign_rgb_color
 
