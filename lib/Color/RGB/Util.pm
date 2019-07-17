@@ -22,6 +22,8 @@ our @EXPORT_OK = qw(
                        map_rgb_color
                        reverse_rgb_color
                        rgb2grayscale
+                       rgb2int
+                       int2rgb
                        rgb2sepia
                        rgb_luminance
                        tint_rgb_color
@@ -165,6 +167,25 @@ sub rgb2grayscale {
     # basically we just average the R, G, B
     my $avg = int(($r + $g + $b)/3);
     return sprintf("%02x%02x%02x", $avg, $avg, $avg);
+}
+
+sub rgb2int {
+    my $rgb = shift;
+
+    # just to check
+    $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+
+    hex($rgb);
+}
+
+sub int2rgb {
+    my $int = shift;
+
+    return sprintf("%02x%02x%02x",
+                   ($int & 0xff0000) >> 16,
+                   ($int & 0x00ff00) >>  8,
+                   ($int & 0x0000ff),
+               );
 }
 
 sub rgb2sepia {
