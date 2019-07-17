@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Test::Exception;
 use Test::More 0.98;
+use Test::RandomResult;
 
 use Color::RGB::Util qw(
                            assign_rgb_color
@@ -72,11 +73,14 @@ subtest mix_rgb_colors => sub {
 };
 
 subtest rand_rgb_color => sub {
-    ok "currently not tested";
+    results_look_random { rgb2int(rand_rgb_color()) } between=>[0, 0xffffff];
 };
 
 subtest rand_rgb_colors => sub {
-    ok "currently not tested";
+    my @vals = rand_rgb_colors(5);
+    is(scalar(@vals), 5);
+
+    results_look_random { rgb2int(rand_rgb_colors()) } between=>[0, 0xffffff];
 };
 
 subtest reverse_rgb_color => sub {
