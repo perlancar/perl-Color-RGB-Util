@@ -1,3 +1,8 @@
+0.596   2019-07-17  Released-By: PERLANCAR; Urgency: medium
+
+	- Add functions: rand_rgb_golors, rgb2int, int2rgb.
+
+
 0.595   2019-02-13  Released-By: PERLANCAR
 
 	- Add functions: assign_rgb_light_color, assign_rgb_dark_color.
