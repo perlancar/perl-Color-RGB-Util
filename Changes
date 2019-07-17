@@ -1,3 +1,10 @@
+0.597   2019-07-17  Released-By: PERLANCAR; Urgency: low
+
+	- No functional changes.
+
+        - [test] Add tests for rand_rgb_color() and rand_rgb_colors().
+
+
 0.596   2019-07-17  Released-By: PERLANCAR; Urgency: medium
 
 	- Add functions: rand_rgb_golors, rgb2int, int2rgb.
