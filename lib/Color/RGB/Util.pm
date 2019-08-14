@@ -140,7 +140,7 @@ sub rand_rgb_colors {
 
     my @res;
     while (@res < $num) {
-        my $attempt = 0;
+        my $num_attempts = 0;
         my $rgb;
         while (1) {
             $rgb = rand_rgb_color();
@@ -159,7 +159,7 @@ sub rand_rgb_colors {
                 }
             } # REJECT
             last if !$reject;
-            last if ++$attempt >= $max_attempts;
+            last if ++$num_attempts >= $max_attempts;
         }
         push @res, $rgb;
     }
