@@ -461,6 +461,9 @@ Uint, default 1000. Number of attempts to try generating the next random color
 if the generated color is rejected because it is light/dark, or because it's in
 C<avoid_colors>.
 
+When the number of attempts has been exceeded, the generated color is used
+anyway.
+
 =back
 
 =head2 reverse_rgb_color
