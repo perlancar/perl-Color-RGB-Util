@@ -36,6 +36,10 @@ our @EXPORT_OK = qw(
 
 my $re_rgb = qr/\A#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})\z/;
 
+sub _min {
+    $_[0] < $_[1] ? $_[0] : $_[1];
+}
+
 sub assign_rgb_color {
     require Digest::SHA;
 
@@ -229,18 +233,33 @@ sub rgb_diff {
     my $dg2 = ($g1-$g2)**2;
     my $db2 = ($b1-$b2)**2;
 
-    if ($algo eq 'approx1') {
+    if ($algo eq 'approx1' || $algo eq 'approx2') {
         my $rm = ($r1 + $r2)/2;
-        return (2*$dr2 + 4*$dg2 + 3*$db2 + $rm*($dr2 - $db2)/256 )**0.5;
-    } elsif ($algo eq 'approx2') {
-        my $rm = ($r1 + $r2)/2;
-        if ($rm < 128) {
-            return (3*$dr2 + 4*$dg2 + 2*$db2)**0.5;
-        } else {
-            return (2*$dr2 + 4*$dg2 + 3*$db2)**0.5;
+        if ($algo eq 'approx1') {
+            return (2*$dr2 + 4*$dg2 + 3*$db2 + $rm*($dr2 - $db2)/256 )**0.5;
+        } else { # approx2
+            if ($rm < 128) {
+                return (3*$dr2 + 4*$dg2 + 2*$db2)**0.5;
+            } else {
+                return (2*$dr2 + 4*$dg2 + 3*$db2)**0.5;
+            }
         }
-    } else {
-        # euclidean
+    } elsif ($algo eq 'hsv_euclidean' || $algo eq 'hsv_hue1') {
+        my $hsv1 = rgb2hsv($rgb1);
+        my ($h1, $s1, $v1) = split / /, $hsv1;
+        my $hsv2 = rgb2hsv($rgb2);
+        my ($h2, $s2, $v2) = split / /, $hsv2;
+
+        my $dh2 = ( _min(abs($h2-$h1), 360-abs($h2-$h1))/180 )**2;
+        my $ds2 = ( $s2-$s1 )**2;
+        my $dv2 = ( ($v2-$v1)/255.0 )**2;
+
+        if ($algo eq 'hsv_hue1') {
+            return (5*$dh2 + $ds2 + $dv2)**0.5;
+        } else { # hsv_euclidean
+            return ($dh2 + $ds2 + $dv2)**0.5;
+        }
+    } else { # euclidean
         return ($dr2 + $dg2 + $db2)**0.5;
     }
 }
@@ -630,21 +649,46 @@ Usage:
  my $dist = rgb_diff($rgb1, $rgb2[ , $algo ])
 
 Calculate difference between two RGB colors, using one of several algorithms.
-The default ("euclidean") simply calculates the distance as:
+
+=over
+
+=item * euclidean
+
+The default. It calculates the distance as:
 
  ( (R1-R2)**2 + (G1-G2)**2 + (B1-B2)**2 )**0.5
 
-which is the same as what L</"rgb_distance">() would produce. Another algorithm
-("approx1") uses the following formula:
+which is the same as what L</"rgb_distance">() would produce.
+
+=item * approx1
+
+This algorithm uses the following formula:
 
  ( 2*(R1-R2)**2 + 4*(G1-G2)**2 + 3*(B1-B2)**2 + Rm*((R1-R2)**2 - (B1-B2)**2)/256 )**0.5
 
 where, Rm or "R mean" is (R1+R2)/2.
 
-Another algorithm ("approx2") offers this formula:
+=item * approx2
+
+Like C<approx1>, but uses this formula:
 
  ( 2*(R1-R2)**2 + 4*(G1-G2)**2 + 3*(B1-B2)**2 )**0.5  # if Rm < 128
  ( 3*(R1-R2)**2 + 4*(G1-G2)**2 + 2*(B1-B2)**2 )**0.5  # otherwise
+
+=item * hsv_euclidean
+
+Convert the RGB values to HSV, then calculate the HSV distance. Please see
+source code for details.
+
+=over hsv_hue1
+
+Like C<hsv_euclidean> but puts more emphasis on hue difference. This algorithm
+is used, for example, by L<Color::ANSI::Util> when mapping RGB 24bit color to
+the "closest" the ANSI 256-color or 16-color. This algorithm tends to choose the
+hued colors instead of favoring to fallback on white/gray, which is more
+preferred.
+
+=back
 
 For more details about color difference, refer to
 L<https://en.wikipedia.org/wiki/Color_difference>.
