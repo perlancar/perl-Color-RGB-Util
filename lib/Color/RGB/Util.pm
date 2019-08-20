@@ -680,7 +680,7 @@ Like C<approx1>, but uses this formula:
 Convert the RGB values to HSV, then calculate the HSV distance. Please see
 source code for details.
 
-=over hsv_hue1
+=item * hsv_hue1
 
 Like C<hsv_euclidean> but puts more emphasis on hue difference. This algorithm
 is used, for example, by L<Color::ANSI::Util> when mapping RGB 24bit color to
