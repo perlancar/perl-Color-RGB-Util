@@ -22,6 +22,8 @@ our @EXPORT_OK = qw(
                        rand_rgb_colors
                        reverse_rgb_color
                        rgb2grayscale
+                       rgb2hsv
+                       rgb2hsl
                        rgb2int
                        rgb2sepia
                        rgb_diff
@@ -300,6 +302,106 @@ sub tint_rgb_color {
                );
 }
 
+sub rgb2hsl {
+    my ($rgb) = @_;
+
+    my ($r, $g, $b) =
+        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+    for ($r, $g, $b) { $_ = hex($_)/255 }
+
+    my $max = $r;
+    my $maxc = 'r';
+    my $min = $r;
+
+    if ($g > $max) {
+        $max = $g;
+        $maxc = 'g';
+    }
+    if ($b > $max) {
+        $max = $b;
+        $maxc = 'b';
+    }
+
+    if ($g < $min) {
+        $min = $g;
+    }
+    if ($b < $min) {
+        $min = $b;
+    }
+
+    my ($h, $s, $l);
+    if ($max == $min) {
+        $h = 0;
+    } elsif ($maxc eq 'r') {
+        $h = 60 * (($g - $b) / ($max - $min)) % 360;
+    } elsif ($maxc eq 'g') {
+        $h = (60 * (($b - $r) / ($max - $min)) + 120);
+    } elsif ($maxc eq 'b') {
+        $h = (60 * (($r - $g) / ($max - $min)) + 240);
+    }
+
+    $l = ($max + $min) / 2;
+
+    if ($max == $min) {
+        $s = 0;
+    } elsif($l <= .5) {
+        $s = ($max - $min) / ($max + $min);
+    } else {
+        $s = ($max - $min) / (2 - ($max + $min));
+    }
+
+    return sprintf("%.3g %.3g %.3g", $h, $s, $l);
+}
+
+sub rgb2hsv {
+    my ($rgb) = @_;
+
+    my ($r, $g, $b) =
+        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+    for ($r, $g, $b) { $_ = hex($_)/255 }
+
+    my $max = $r;
+    my $maxc = 'r';
+    my $min = $r;
+
+    if ($g > $max) {
+        $max = $g;
+        $maxc = 'g';
+    }
+    if($b > $max) {
+        $max = $b;
+        $maxc = 'b';
+    }
+
+    if($g < $min) {
+        $min = $g;
+    }
+    if($b < $min) {
+        $min = $b;
+    }
+
+    my ($h, $s, $v);
+
+    if ($max == $min) {
+        $h = 0;
+    } elsif ($maxc eq 'r') {
+        $h = 60 * (($g - $b) / ($max - $min)) % 360;
+    } elsif ($maxc eq 'g') {
+        $h = (60 * (($b - $r) / ($max - $min)) + 120);
+    } elsif ($maxc eq 'b') {
+        $h = (60 * (($r - $g) / ($max - $min)) + 240);
+    }
+
+    $v = $max;
+    if($max == 0) {
+        $s = 0;
+    } else {
+        $s = 1 - ($min / $max);
+    }
+
+    return sprintf("%.3g %.3g %.3g", $h, $s, $v);
+}
+
 1;
 # ABSTRACT: Utilities related to RGB colors
 
@@ -488,6 +590,22 @@ Usage:
  my $rgb_gs = rgb2grayscale($rgb);
 
 Convert C<$rgb> to grayscale RGB value.
+
+=head2 rgb2hsl
+
+Usage:
+
+ my $hsl = rgb2hsl($rgb); # example: "0 1 0.5"
+
+Convert RGB (0-255) to HSL. The result is a space-separated H, S, L values.
+
+=head2 rgb2hsv
+
+Usage:
+
+ my $hsv = rgb2hsv($rgb); # example: "0 1 255"
+
+Convert RGB (0-255) to HSV. The result is a space-separated H, S, V values.
 
 =head2 rgb2int
 
