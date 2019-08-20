@@ -229,10 +229,17 @@ sub rgb_diff {
 
     if ($algo eq 'approx1') {
         my $rm = ($r1 + $r2)/2;
-        (2*$dr2 + 4*$dg2 + 3*$db2 + $rm*($dr2 - $db2)/256 )**0.5;
+        return (2*$dr2 + 4*$dg2 + 3*$db2 + $rm*($dr2 - $db2)/256 )**0.5;
+    } elsif ($algo eq 'approx2') {
+        my $rm = ($r1 + $r2)/2;
+        if ($rm < 128) {
+            return (3*$dr2 + 4*$dg2 + 2*$db2)**0.5;
+        } else {
+            return (2*$dr2 + 4*$dg2 + 3*$db2)**0.5;
+        }
     } else {
         # euclidean
-        ($dr2 + $dg2 + $db2)**0.5;
+        return ($dr2 + $dg2 + $db2)**0.5;
     }
 }
 
@@ -515,6 +522,11 @@ which is the same as what L</"rgb_distance">() would produce. Another algorithm
  ( 2*(R1-R2)**2 + 4*(G1-G2)**2 + 3*(B1-B2)**2 + Rm*((R1-R2)**2 - (B1-B2)**2)/256 )**0.5
 
 where, Rm or "R mean" is (R1+R2)/2.
+
+Another algorithm ("approx2") offers this formula:
+
+ ( 2*(R1-R2)**2 + 4*(G1-G2)**2 + 3*(B1-B2)**2 )**0.5  # if Rm < 128
+ ( 3*(R1-R2)**2 + 4*(G1-G2)**2 + 2*(B1-B2)**2 )**0.5  # otherwise
 
 For more details about color difference, refer to
 L<https://en.wikipedia.org/wiki/Color_difference>.
