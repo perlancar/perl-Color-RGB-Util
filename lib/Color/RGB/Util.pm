@@ -1,6 +1,8 @@
 package Color::RGB::Util;
 
+# AUTHORITY
 # DATE
+# DIST
 # VERSION
 
 use 5.010001;
@@ -15,6 +17,10 @@ our @EXPORT_OK = qw(
                        assign_rgb_color
                        assign_rgb_dark_color
                        assign_rgb_light_color
+                       hsl2hsv
+                       hsl2rgb
+                       hsv2hsl
+                       hsv2rgb
                        int2rgb
                        mix_2_rgb_colors
                        mix_rgb_colors
@@ -421,6 +427,69 @@ sub rgb2hsv {
     return sprintf("%.3g %.3g %.3g", $h, $s, $v);
 }
 
+sub hsl2hsv {
+    my $hsl = shift;
+
+    my ($h, $s, $l) = split / /, $hsl;
+    my $_h = $h;
+    my $_s;
+    my $_v;
+
+    $l *= 2;
+    $s *= ($l <= 1) ? $l : 2-$l;
+    $_v = ($l+$s) / 2;
+    $_s = (2*$s) / ($l+$s);
+
+    "$_h $_s $_v";
+}
+
+sub hsv2hsl {
+    my $hsv = shift;
+
+    my ($h, $s, $v) = split / /, $hsv;
+    my $_h = $h;
+    my $_s = $s * $v;
+    my $_l = (2-$s) * $v;
+
+    $_s /= $_l <= 1 ? ($_l==0 ? 1 : $_l) : (2-$_l);
+    $_l /= 2;
+
+    "$_h $_s $_l";
+}
+
+sub hsl2rgb {
+    hsv2rgb(hsl2hsv(shift));
+}
+
+sub hsv2rgb {
+    my $hsv = shift;
+
+    my ($h, $s, $v) = split / /, $hsv;
+
+    my $i = int($h/60);
+    my $f = $h/60 - $i;
+    my $p = $v * (1-$s);
+    my $q = $v * (1-$f*$s);
+    my $t = $v * (1-(1-$f)*$s);
+
+    my ($r, $g, $b);
+    if ($i==0) {
+        $r = $v; $g = $t; $b = $p;
+    } elsif ($i==1) {
+        $r = $q; $g = $v; $b = $p;
+    } elsif ($i==2) {
+        $r = $p; $g = $v; $b = $t;
+    } elsif ($i==3) {
+        $r = $p; $g = $q; $b = $v;
+    } elsif ($i==4) {
+        $r = $t; $g = $p; $b = $v;
+    } else {
+        $r = $v; $g = $p; $b = $q;
+    }
+
+    return sprintf("%02x%02x%02x", $r*255, $g*255, $b*255);
+}
+
 1;
 # ABSTRACT: Utilities related to RGB colors
 
@@ -523,6 +592,18 @@ dark.
 Like L</assign_rgb_color> except that it will make sure the assigned color is
 light.
 
+=head2 hsv2rgb
+
+Usage:
+
+ my $rgb = hsv2rgb("0 1 1"); # => ff0000
+
+Convert HSV to RGB. HSV should be given in a whitespace-separated H,S,V values
+e.g. "0 1 1". H (hue degree) has a range from 0-360 where 0 is red, 120 is
+green, 240 is blue and 360 is back to red. S (saturation) has a range from 0-1
+where 0 is gray and 1 is fully saturated hue. V (value) has a range from 0-1
+where 0 is black and 1 is white. See also L</rgb2hsv>.
+
 =head2 int2rgb
 
 Usage:
@@ -624,7 +705,7 @@ Usage:
 
  my $hsv = rgb2hsv($rgb); # example: "0 1 255"
 
-Convert RGB (0-255) to HSV. The result is a space-separated H, S, V values.
+Convert RGB (0-255) to HSV. The result is a space-separated H, S, V values. See
 
 =head2 rgb2int
 
@@ -690,7 +771,7 @@ preferred.
 
 =back
 
-For more details about color difference, refer to
+For more about color difference, try reading
 L<https://en.wikipedia.org/wiki/Color_difference>.
 
 =head2 rgb_distance
