@@ -592,6 +592,35 @@ dark.
 Like L</assign_rgb_color> except that it will make sure the assigned color is
 light.
 
+=head2 hsl2hsv
+
+Usage:
+
+ my $hsl = hsl2hsv("0 1 0.5"); # => "0 1 1"
+
+Convert HSL to HSV.
+
+=head2 hsl2rgb
+
+Usage:
+
+ my $rgb = hsl2rgb("0 1 0.5"); # => ff0000
+
+Convert HSL to RGB. HSL should be given in a whitespace-separated H,S,L values
+e.g. "0 1 0.5". H (hue degree) has a range from 0-360 where 0 is red, 120 is
+green, 240 is blue and 360 is back to red. S (saturation) has a range from 0-1
+where 0 is gray and 1 is fully saturated hue. L (lumination) has a range from
+0-1 where 0 is fully black, 0.5 fully saturated, and 1 is fully white. See also
+L</rgb2hsl>.
+
+=head2 hsv2hsl
+
+Usage:
+
+ my $hsl = hsv2hsl("0 1 1"); # => "0 1 0.5"
+
+Convert HSV to HSL.
+
 =head2 hsv2rgb
 
 Usage:
