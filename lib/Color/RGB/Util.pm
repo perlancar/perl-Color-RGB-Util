@@ -87,9 +87,9 @@ sub mix_2_rgb_colors {
     $pct //= 0.5;
 
     my ($r1, $g1, $b1) =
-        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color '$rgb1', must be in 'ffffff' form";
     my ($r2, $g2, $b2) =
-        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color '$rgb2', must be in 'ffffff' form";
     for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
 
     return sprintf("%02x%02x%02x",
@@ -130,10 +130,10 @@ sub rand_rgb_color {
 
     $rgb1 //= '000000';
     my ($r1, $g1, $b1) =
-        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color '$rgb1', must be in 'ffffff' form";
     $rgb2 //= 'ffffff';
     my ($r2, $g2, $b2) =
-        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color '$rgb2', must be in 'ffffff' form";
     for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
 
     return sprintf("%02x%02x%02x",
@@ -182,7 +182,7 @@ sub reverse_rgb_color {
     my ($rgb) = @_;
 
     my ($r, $g, $b) =
-        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+        $rgb =~ $re_rgb or die "Invalid rgb color '$rgb', must be in 'ffffff' form";
     for ($r, $g, $b) { $_ = hex $_ }
 
     return sprintf("%02x%02x%02x", 255-$r, 255-$g, 255-$b);
@@ -192,7 +192,7 @@ sub rgb2grayscale {
     my ($rgb) = @_;
 
     my ($r, $g, $b) =
-        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+        $rgb =~ $re_rgb or die "Invalid rgb color '$rgb', must be in 'ffffff' form";
     for ($r, $g, $b) { $_ = hex $_ }
 
     # basically we just average the R, G, B
@@ -204,7 +204,7 @@ sub rgb2int {
     my $rgb = shift;
 
     # just to check
-    $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+    $rgb =~ $re_rgb or die "Invalid rgb color '$rgb', must be in 'ffffff' form";
 
     hex($rgb);
 }
@@ -213,7 +213,7 @@ sub rgb2sepia {
     my ($rgb) = @_;
 
     my ($r, $g, $b) =
-        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+        $rgb =~ $re_rgb or die "Invalid rgb color '$rgb', must be in 'ffffff' form";
     for ($r, $g, $b) { $_ = hex $_ }
 
     # reference: http://www.techrepublic.com/blog/howdoi/how-do-i-convert-images-to-grayscale-and-sepia-tone-using-c/120
@@ -230,9 +230,9 @@ sub rgb_diff {
     $algo //= 'euclidean';
 
     my ($r1, $g1, $b1) =
-        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color '$rgb1', must be in 'ffffff' form";
     my ($r2, $g2, $b2) =
-        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color '$rgb2', must be in 'ffffff' form";
     for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
 
     my $dr2 = ($r1-$r2)**2;
@@ -274,9 +274,9 @@ sub rgb_distance {
     my ($rgb1, $rgb2) = @_;
 
     my ($r1, $g1, $b1) =
-        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color '$rgb1', must be in 'ffffff' form";
     my ($r2, $g2, $b2) =
-        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color '$rgb2', must be in 'ffffff' form";
     for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
 
     (($r1-$r2)**2 + ($g1-$g2)**2 + ($b1-$b2)**2)**0.5;
@@ -301,7 +301,7 @@ sub rgb_luminance {
     my ($rgb) = @_;
 
     my ($r, $g, $b) =
-        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+        $rgb =~ $re_rgb or die "Invalid rgb color '$rgb', must be in 'ffffff' form";
     for ($r, $g, $b) { $_ = hex $_ }
 
     return _rgb_luminance($r, $g, $b);
@@ -313,9 +313,9 @@ sub tint_rgb_color {
     $pct //= 0.5;
 
     my ($r1, $g1, $b1) =
-        $rgb1 =~ $re_rgb or die "Invalid rgb1 color, must be in 'ffffff' form";
+        $rgb1 =~ $re_rgb or die "Invalid rgb1 color '$rgb1', must be in 'ffffff' form";
     my ($r2, $g2, $b2) =
-        $rgb2 =~ $re_rgb or die "Invalid rgb2 color, must be in 'ffffff' form";
+        $rgb2 =~ $re_rgb or die "Invalid rgb2 color '$rgb2', must be in 'ffffff' form";
     for ($r1, $g1, $b1, $r2, $g2, $b2) { $_ = hex $_ }
 
     my $lum = _rgb_luminance($r1, $g1, $b1);
@@ -331,7 +331,7 @@ sub rgb2hsl {
     my ($rgb) = @_;
 
     my ($r, $g, $b) =
-        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+        $rgb =~ $re_rgb or die "Invalid rgb color '$rgb', must be in 'ffffff' form";
     for ($r, $g, $b) { $_ = hex($_)/255 }
 
     my $max = $r;
@@ -382,7 +382,7 @@ sub rgb2hsv {
     my ($rgb) = @_;
 
     my ($r, $g, $b) =
-        $rgb =~ $re_rgb or die "Invalid rgb color, must be in 'ffffff' form";
+        $rgb =~ $re_rgb or die "Invalid rgb color '$rgb', must be in 'ffffff' form";
     for ($r, $g, $b) { $_ = hex($_)/255 }
 
     my $max = $r;
