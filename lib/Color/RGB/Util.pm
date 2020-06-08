@@ -46,6 +46,12 @@ sub _min {
     $_[0] < $_[1] ? $_[0] : $_[1];
 }
 
+sub _wrap_h {
+    my $h = shift;
+    $h %= 360 if abs($h) > 360;
+    $h >= 0 ? $h : 360+$h;
+}
+
 sub assign_rgb_color {
     require Digest::SHA;
 
@@ -431,6 +437,7 @@ sub hsl2hsv {
     my $hsl = shift;
 
     my ($h, $s, $l) = split / /, $hsl;
+    $h>=0 && $h<=360 or $h = _wrap_h($h); $s>=0 && $s<=1 or die "Invalid S in HSL '$hsl', must be in 0-1"; $l>=0 && $l<=1 or die "Invalid L in HSL '$hsl', must be in 0-1";
     my $_h = $h;
     my $_s;
     my $_v;
@@ -447,6 +454,7 @@ sub hsv2hsl {
     my $hsv = shift;
 
     my ($h, $s, $v) = split / /, $hsv;
+    $h>=0 && $h<=360 or $h = _wrap_h($h); $s>=0 && $s<=1 or die "Invalid S in HSV '$hsv', must be in 0-1"; $v>=0 && $v<=1 or die "Invalid V in HSV '$hsv', must be in 0-1";
     my $_h = $h;
     my $_s = $s * $v;
     my $_l = (2-$s) * $v;
@@ -465,6 +473,7 @@ sub hsv2rgb {
     my $hsv = shift;
 
     my ($h, $s, $v) = split / /, $hsv;
+    $h>=0 && $h<=360 or $h = _wrap_h($h); $s>=0 && $s<=1 or die "Invalid S in HSV '$hsv', must be in 0-1"; $v>=0 && $v<=1 or die "Invalid V in HSV '$hsv', must be in 0-1";
 
     my $i = int($h/60);
     my $f = $h/60 - $i;
