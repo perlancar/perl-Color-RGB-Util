@@ -155,6 +155,7 @@ sub rand_rgb_colors {
     my $light_color  = exists($opts->{light_color}) ? $opts->{light_color} : 1;
     my $max_attempts = $opts->{max_attempts} // 1000;
     my $avoid_colors = $opts->{avoid_colors};
+    my $hash_prefix = $opts->{hash_prefix};
 
     my $num_check = 10;
     my $min_distance = rgb_diff("000000", "ffffff", "approx2") / 2 / $num;
@@ -189,7 +190,7 @@ sub rand_rgb_colors {
             last if !$reject;
             last if ++$num_attempts >= $max_attempts;
         }
-        push @res, $rgb;
+        push @res, ($hash_prefix ? "#" : "") . $rgb;
     }
     @res;
 }
@@ -721,6 +722,11 @@ C<avoid_colors>.
 
 When the number of attempts has been exceeded, the generated color is used
 anyway.
+
+=item * hash_prefix
+
+Whether to add hash prefix to produced color codes ("#123456") or not
+("123456").
 
 =back
 
