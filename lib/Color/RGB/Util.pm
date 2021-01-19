@@ -156,6 +156,9 @@ sub rand_rgb_colors {
     my $max_attempts = $opts->{max_attempts} // 1000;
     my $avoid_colors = $opts->{avoid_colors};
 
+    my $num_check = 10;
+    my $min_distance = rgb_diff("000000", "ffffff", "approx2") / 2 / $num;
+
     my @res;
     while (@res < $num) {
         my $num_attempts = 0;
@@ -175,6 +178,13 @@ sub rand_rgb_colors {
                 if ($avoid_colors && ref $avoid_colors eq 'HASH') {
                     do { $reject++; last } if $avoid_colors->{$rgb}
                 }
+
+                for (1..$num_check) {
+                    last if @res-$_ < 0;
+                    my $prev_rgb = $res[ @res - $_ ];
+                    do { $reject++; last REJECT } if rgb_diff($rgb, $prev_rgb, "approx2") < $min_distance;
+                }
+
             } # REJECT
             last if !$reject;
             last if ++$num_attempts >= $max_attempts;
