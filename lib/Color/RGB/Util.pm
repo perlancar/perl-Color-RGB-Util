@@ -692,8 +692,9 @@ Usage:
 
  my @rgbs = rand_rgb_colors([ \%opts ], $num=1);
 
-Produce C<$num> random RGB colors, with some options. Will make reasonable
-attempt to make the colors different from one another.
+Produce C<$num> random RGB colors, with some options. It does not (yet) create a
+palette of optimally distinct colors, but will make reasonable attempt to make
+the colors different from one another.
 
 Known options:
 
