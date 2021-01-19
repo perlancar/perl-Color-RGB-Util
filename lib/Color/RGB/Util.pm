@@ -781,7 +781,10 @@ which is the same as what L</"rgb_distance">() would produce.
 
 =item * approx1
 
-This algorithm uses the following formula:
+This algorithm, described in [1] as "a low cost approximation" and "a
+combination both weighted Euclidean distance functions, where the weight factors
+depend on how big the 'red' component of the colour is" with "results that are
+very close to L*u*v" and "a more stable algorithm", uses the following formula:
 
  ( 2*(R1-R2)**2 + 4*(G1-G2)**2 + 3*(B1-B2)**2 + Rm*((R1-R2)**2 - (B1-B2)**2)/256 )**0.5
 
@@ -809,8 +812,12 @@ preferred.
 
 =back
 
+TODO: redmean low-cost approximation, CMC l:c.
+
 For more about color difference, try reading
 L<https://en.wikipedia.org/wiki/Color_difference>.
+
+[1] https://www.compuphase.com/cmetric.htm
 
 =head2 rgb_distance
 
