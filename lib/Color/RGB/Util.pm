@@ -602,6 +602,8 @@ Map a string to an RGB color. This is done by producing SHA-1 digest (160bit, 20
 bytes) of the string, then taking the first, 10th, and last byte to become the
 RGB color.
 
+See also: L</assign_rgb_dark_color> and L</assign_rgb_light_color>.
+
 =head2 assign_rgb_dark_color
 
 Like L</assign_rgb_color> except that it will make sure the assigned color is
@@ -620,6 +622,8 @@ Usage:
 
 Convert HSL to HSV.
 
+See also: L</hsv2hsl>.
+
 =head2 hsl2rgb
 
 Usage:
@@ -630,8 +634,9 @@ Convert HSL to RGB. HSL should be given in a whitespace-separated H,S,L values
 e.g. "0 1 0.5". H (hue degree) has a range from 0-360 where 0 is red, 120 is
 green, 240 is blue and 360 is back to red. S (saturation) has a range from 0-1
 where 0 is gray and 1 is fully saturated hue. L (lumination) has a range from
-0-1 where 0 is fully black, 0.5 fully saturated, and 1 is fully white. See also
-L</rgb2hsl>.
+0-1 where 0 is fully black, 0.5 fully saturated, and 1 is fully white.
+
+See also L</rgb2hsl>.
 
 =head2 hsv2hsl
 
@@ -640,6 +645,8 @@ Usage:
  my $hsl = hsv2hsl("0 1 1"); # => "0 1 0.5"
 
 Convert HSV to HSL.
+
+See also L</hsl2hsv>.
 
 =head2 hsv2rgb
 
@@ -651,7 +658,9 @@ Convert HSV to RGB. HSV should be given in a whitespace-separated H,S,V values
 e.g. "0 1 1". H (hue degree) has a range from 0-360 where 0 is red, 120 is
 green, 240 is blue and 360 is back to red. S (saturation) has a range from 0-1
 where 0 is gray and 1 is fully saturated hue. V (value) has a range from 0-1
-where 0 is black and 1 is white. See also L</rgb2hsv>.
+where 0 is black and 1 is white.
+
+See also L</rgb2hsv>.
 
 =head2 int2rgb
 
@@ -660,6 +669,8 @@ Usage:
  my $rgb = int2rgb(0xffffff); # => ffffff
 
 Convert integer to RGB string.
+
+See also L</rgb2int>.
 
 =head2 mix_2_rgb_colors
 
@@ -670,6 +681,8 @@ Usage:
 Mix 2 RGB colors. C<$pct> is a number between 0 and 1, by default 0.5 (halfway),
 the closer to 1 the closer the resulting color to C<$rgb2>.
 
+See also L</mix_rgb_colors>, L</tint_rgb_color>.
+
 =head2 mix_rgb_colors
 
 Usage:
@@ -677,6 +690,8 @@ Usage:
  my $mixed_rgb = mix_rgb_colors($color1, $weight1, $color2, $weight2, ...);
 
 Mix several RGB colors.
+
+See also L</mix_2_rgb_colors>.
 
 =head2 rand_rgb_color
 
@@ -686,6 +701,8 @@ Usage:
 
 Generate a random RGB color. You can specify the limit. Otherwise, they default
 to the full range (000000 to ffffff).
+
+See also L</rand_rgb_colors>.
 
 =head2 rand_rgb_colors
 
@@ -730,6 +747,8 @@ Whether to add hash prefix to produced color codes ("#123456") or not
 
 =back
 
+See also L</rand_rgb_color>.
+
 =head2 reverse_rgb_color
 
 Usage:
@@ -746,6 +765,8 @@ Usage:
 
 Convert C<$rgb> to grayscale RGB value.
 
+See also L<rgb2sepia>.
+
 =head2 rgb2hsl
 
 Usage:
@@ -754,13 +775,17 @@ Usage:
 
 Convert RGB (0-255) to HSL. The result is a space-separated H, S, L values.
 
+See also L</hsl2rgb>.
+
 =head2 rgb2hsv
 
 Usage:
 
  my $hsv = rgb2hsv($rgb); # example: "0 1 255"
 
-Convert RGB (0-255) to HSV. The result is a space-separated H, S, V values. See
+Convert RGB (0-255) to HSV. The result is a space-separated H, S, V values.
+
+See also L</hsv2rgb>.
 
 =head2 rgb2int
 
@@ -770,6 +795,8 @@ Usage:
 
 Convert RGB string to integer.
 
+See also L</int2rgb>.
+
 =head2 rgb2sepia
 
 Usage:
@@ -777,6 +804,8 @@ Usage:
  my $rgb_sepia = rgb2sepia($rgb);
 
 Convert C<$rgb> to sepia tone RGB value.
+
+See also L<rgb2grayscale>.
 
 =head2 rgb_diff
 
@@ -836,6 +865,8 @@ L<https://en.wikipedia.org/wiki/Color_difference>.
 
 [1] https://www.compuphase.com/cmetric.htm
 
+See also L<rgb_distance>.
+
 =head2 rgb_distance
 
 Usage:
@@ -849,6 +880,8 @@ Calculate the euclidean RGB distance, using this formula:
 For example, the distance between "000000" and "ffffff" is ~441.67, while the
 distance between "ffff00" and "ffffff" is 255.
 
+See also L<rgb_diff>.
+
 =head2 rgb_is_dark
 
 Usage:
@@ -858,6 +891,8 @@ Usage:
 Return true if C<$rgb> is a "dark" color, which is determined by checking if the
 RGB distance to "000000" is smaller than to "ffffff".
 
+See also L</rgb_is_light>.
+
 =head2 rgb_is_light
 
 Usage:
@@ -866,6 +901,8 @@ Usage:
 
 Return true if C<$rgb> is a "light" color, which is determined by checking if
 the RGB distance to "000000" is larger than to "ffffff".
+
+See also L</rgb_is_dark>.
 
 =head2 rgb_luminance
 
@@ -888,6 +925,8 @@ Usage:
 Tint C<$rgb> with C<$tint_rgb>. $pct is by default 0.5. It is similar to mixing,
 but the less luminance the color is the less it is tinted with the tint color.
 This has the effect of black color still being black instead of becoming tinted.
+
+See also L<mix_2_rgb_colors>, L<mix_rgb_colors>.
 
 
 =head1 SEE ALSO
