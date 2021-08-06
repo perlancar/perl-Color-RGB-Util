@@ -176,6 +176,7 @@ subtest rgb_diff => sub {
     is(int(rgb_diff("000000","000000", "approx1")),   0);
     is(int(rgb_diff("00ff00","0000ff", "approx1")), 674);
     is(int(rgb_diff("ff0000","000000", "approx1")), 403);
+    dies_ok { rgb_diff("000000","000000", "foo") } 'unknown algo -> dies';
 };
 
 subtest rgb_distance => sub {
