@@ -282,8 +282,10 @@ sub rgb_diff {
         } else { # hsv_euclidean
             return ($dh2 + $ds2 + $dv2)**0.5;
         }
-    } else { # euclidean
+    } elsif ($algo eq 'euclidean') {
         return ($dr2 + $dg2 + $db2)**0.5;
+    } else {
+        die "Unknown algo '$algo'";
     }
 }
 
