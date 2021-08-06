@@ -144,6 +144,8 @@ subtest reverse_rgb_color => sub {
 
 subtest rgb2grayscale => sub {
     is(rgb2grayscale('0033CC'), '555555');
+    is(rgb2grayscale('0033CC', 'weighted_average'), '353535');
+    dies_ok { rgb2grayscale('0033cc', 'foo') } 'unknown algo -> dies';
 };
 
 subtest rgb2hsl => sub {

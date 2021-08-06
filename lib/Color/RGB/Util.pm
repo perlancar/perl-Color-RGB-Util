@@ -206,15 +206,22 @@ sub reverse_rgb_color {
 }
 
 sub rgb2grayscale {
-    my ($rgb) = @_;
+    my ($rgb, $algo) = @_;
 
     my ($r, $g, $b) =
         $rgb =~ $re_rgb or die "Invalid rgb color '$rgb', must be in 'ffffff' form";
     for ($r, $g, $b) { $_ = hex $_ }
 
-    # basically we just average the R, G, B
-    my $avg = int(($r + $g + $b)/3);
-    return sprintf("%02x%02x%02x", $avg, $avg, $avg);
+    $algo //= 'average';
+    if ($algo eq 'weighted_average') {
+        my $avg = int(0.299*$r + 0.587*$g + 0.114*$b);
+        return sprintf("%02x%02x%02x", $avg, $avg, $avg);
+    } elsif ($algo eq 'average') {
+        my $avg = int(($r + $g + $b)/3);
+        return sprintf("%02x%02x%02x", $avg, $avg, $avg);
+    } else {
+        die "Unknown algo '$algo'";
+    }
 }
 
 sub rgb2int {
@@ -560,7 +567,8 @@ sub hsv2rgb {
 
  say reverse_rgb_color('0033CC');                # => ffcc33
 
- say rgb2grayscale('0033CC');                    # => 555555
+ say rgb2grayscale('0033CC');                     # => 555555 # default 'average' algo
+ say rgb2grayscale('0033CC', 'weighted_average'); # => 353535
 
  say rgb2int("ffffff");                          # 16777215 (which is 0xffffff)
 
@@ -763,9 +771,31 @@ Reverse C<$rgb>.
 
 Usage:
 
- my $rgb_gs = rgb2grayscale($rgb);
+ my $rgb_gs = rgb2grayscale($rgb [ , $algo ]);
 
-Convert C<$rgb> to grayscale RGB value.
+Convert C<$rgb> to grayscale RGB value. There are several algorithms (C<$algo>)
+to choose from:
+
+=over
+
+=item * average
+
+The Average method takes the average value of R, G, and B as the grayscale
+value.
+
+ Grayscale = (R + G + B ) / 3.
+
+The average method is simple but does not take into account the non-linearity of
+human vision (eyes are most sensitive to green, less to red, least to blue).
+
+=item * weighted_average
+
+This method gives weights to each of red, green, blue elements to take into
+account the sensitivity of human eyes.
+
+ Grayscale  = 0.299R + 0.587G + 0.114B
+
+=back
 
 See also L<rgb2sepia>.
 
