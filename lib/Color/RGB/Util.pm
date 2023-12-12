@@ -1,18 +1,18 @@
 package Color::RGB::Util;
 
-# AUTHORITY
-# DATE
-# DIST
-# VERSION
-
 use 5.010001;
 use strict;
 use warnings;
 
 #use List::Util qw(min);
 
-require Exporter;
-our @ISA = qw(Exporter);
+use Exporter qw(import);
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
+
 our @EXPORT_OK = qw(
                        assign_rgb_color
                        assign_rgb_dark_color
@@ -38,6 +38,7 @@ our @EXPORT_OK = qw(
                        rgb_is_light
                        rgb_luminance
                        tint_rgb_color
+                       rgb_closest_to
                );
 
 my $re_rgb = qr/\A#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})\z/;
@@ -519,6 +520,37 @@ sub hsv2rgb {
     return sprintf("%02x%02x%02x", $r*255, $g*255, $b*255);
 }
 
+my $basic_colors = {
+    black   => "000000",
+    blue    => "0000ff",
+    brown   => "663333",
+    cyan    => "00ffff", # a.k.a. aqua
+    green   => "00ff00",
+    grey    => "808080",
+    magenta => "ff00ff", # a.k.a. fuchsia
+    orange  => "ff8000",
+    pink    => "ffcccc",
+    purple  => "800080", # a.k.a. violet
+    red     => "ff0000",
+    white   => "ffffff",
+    yellow  => "ffff00",
+};
+sub rgb_closest_to {
+    my $opts = ref($_[0]) eq 'HASH' ? shift : {};
+    my $colors = $opts->{colors} // $basic_colors;
+    my $rgb = shift;
+
+    my $min_diff; my $closest_color;
+    for my $colorname (sort keys %$colors) {
+        my $diff = rgb_diff($rgb, $colors->{$colorname}, 'hsv_hue1');
+        if (!defined($min_diff) || $min_diff > $diff) {
+            $closest_color = $colorname;
+            $min_diff = $diff;
+        }
+    }
+    $closest_color;
+}
+
 1;
 # ABSTRACT: Utilities related to RGB colors
 
@@ -537,6 +569,7 @@ sub hsv2rgb {
      rgb2grayscale
      rgb2int
      rgb2sepia
+     rgb_closest_to
      rgb_diff
      rgb_distance
      rgb_is_dark
@@ -573,6 +606,8 @@ sub hsv2rgb {
  say rgb2int("ffffff");                          # 16777215 (which is 0xffffff)
 
  say rgb2sepia('0033CC');                        # => 4d4535
+
+ say rgb_closest_to('cc211e');                   # => "red"
 
  say rgb_distance('000000', '000000')            # => 0
  say rgb_distance('01f000', '04f400')            # => 5
@@ -838,6 +873,38 @@ Usage:
 Convert C<$rgb> to sepia tone RGB value.
 
 See also L<rgb2grayscale>.
+
+=head2 rgb_closest_to
+
+Usage:
+
+ my $colorname = rgb_closest_to( [ \%opts , ] $color);
+
+Return the primary color C<$color> is closest to. Options:
+
+=over
+
+=item * colors
+
+A hash of color names and RGB values. If unspecified, the default is:
+
+ {
+  black   => "000000",
+  blue    => "0000ff",
+  brown   => "663333",
+  cyan    => "00ffff", # a.k.a. aqua
+  green   => "00ff00",
+  grey    => "808080",
+  magenta => "ff00ff", # a.k.a. fuchsia
+  orange  => "ff8000",
+  pink    => "ffcccc",
+  purple  => "800080", # a.k.a. violet
+  red     => "ff0000",
+  white   => "ffffff",
+  yellow  => "ffff00",
+ }
+
+=back
 
 =head2 rgb_diff
 
