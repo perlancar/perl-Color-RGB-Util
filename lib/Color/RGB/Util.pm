@@ -156,7 +156,9 @@ sub rand_rgb_colors {
     my $light_color  = exists($opts->{light_color}) ? $opts->{light_color} : 1;
     my $max_attempts = $opts->{max_attempts} // 1000;
     my $avoid_colors = $opts->{avoid_colors};
-    my $hash_prefix = $opts->{hash_prefix};
+    my $hash_prefix  = $opts->{hash_prefix};
+    my $from_color   = $opts->{from_color};
+    my $to_color     = $opts->{to_color};
 
     my $num_check = 10;
     my $min_distance = rgb_diff("000000", "ffffff", "approx2") / 2 / $num;
@@ -166,7 +168,7 @@ sub rand_rgb_colors {
         my $num_attempts = 0;
         my $rgb;
         while (1) {
-            $rgb = rand_rgb_color();
+            $rgb = rand_rgb_color($from_color, $to_color);
             my $reject = 0;
           REJECT: {
                 if ($light_color) {
@@ -762,6 +764,14 @@ the colors different from one another.
 Known options:
 
 =over
+
+=item * from_color
+
+RGB value, lower limit, optional.
+
+=item * to_color
+
+RGB value, high limit, optional.
 
 =item * light_color
 
