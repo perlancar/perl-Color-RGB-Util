@@ -1,3 +1,8 @@
+0.608   2025-03-19  Released-By: PERLANCAR; Urgency: medium
+
+        - [func rand_rgb_colors] Add from_color, to_color arguments.
+
+
 0.607   2023-12-12  Released-By: PERLANCAR; Urgency: medium
 
         - Add function: rgb_closest_to().
