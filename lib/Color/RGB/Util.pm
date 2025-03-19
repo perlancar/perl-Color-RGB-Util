@@ -41,6 +41,8 @@ our @EXPORT_OK = qw(
                        rgb_closest_to
                );
 
+our %SPEC;
+
 my $re_rgb = qr/\A#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})\z/;
 
 sub _min {
@@ -132,6 +134,27 @@ sub mix_rgb_colors {
                );
 }
 
+$SPEC{rand_rgb_color} = {
+    v => 1.1,
+    summary => 'Generate a random RGB color',
+    args_as => 'array',
+    args => {
+        from_color => {
+            schema => 'color::rgb24',
+            default => '000000',
+            pos => 0,
+        },
+        to_color => {
+            schema => 'color::rgb24',
+            default => 'ffffff',
+            pos => 1,
+        },
+    },
+    result_naked => 1,
+    result => {
+        schema => 'color::rgb24*',
+    },
+};
 sub rand_rgb_color {
     my ($rgb1, $rgb2) = @_;
 
